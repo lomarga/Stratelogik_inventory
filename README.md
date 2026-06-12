@@ -1,6 +1,5 @@
 # 🤖 Agente de Optimización de Inventarios | Stratelogik
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://stratelogik.com/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
 Este repositorio contiene el código fuente del **Agente de IA para Optimización de Inventarios**, una herramienta interactiva diseñada por **Stratelogik** para facilitar la toma de decisiones tácticas en procesos de S&OP (Sales and Operations Planning) y gestión de redes de distribución.
