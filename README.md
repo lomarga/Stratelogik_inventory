@@ -1,30 +1,30 @@
-#  Agente de Optimización de Inventarios | Stratelogik
+# Sistema de Inteligencia y Optimización de Inventarios | Stratelogik
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://stratelogik.com/)
 
-Este repositorio contiene el código fuente del **Agente de IA para Optimización de Inventarios**, una herramienta interactiva diseñada por **Stratelogik** para facilitar la toma de decisiones tácticas en procesos de S&OP (Sales and Operations Planning) y gestión de redes de distribución.
+Este repositorio contiene el código fuente de la **Control Tower de Inventarios**, una plataforma analítica desarrollada por **Stratelogik**. Está diseñada para transformar datos transaccionales históricos en estrategias operativas claras, permitiendo a los equipos de Supply Chain y S&OP tomar decisiones basadas en modelos estocásticos y segmentación avanzada.
 
-##  Objetivo del Proyecto
+## Arquitectura de la Plataforma
 
-En entornos logísticos y de manufactura, planificar basándose únicamente en la "demanda promedio" expone a la operación a roturas de stock o excesos de capital inmovilizado. Esta aplicación demuestra cómo la analítica avanzada puede calcular dinámicamente parámetros críticos en tiempo real, adaptándose a la volatilidad del mercado y a las variaciones en los tiempos de entrega (Lead Time).
+La aplicación está dividida en tres módulos analíticos principales:
 
-##  Características Principales
+### 1. Segmentación de Portafolio (Matriz ABC-XYZ)
+Clasificación dinámica de todos los SKUs de la operación cruzando el volumen de demanda (Pareto ABC) con la predictibilidad y volatilidad del mercado (Coeficiente de Variación XYZ).
+* **Dispersión Visual:** Gráfico interactivo que distribuye los productos en 9 cuadrantes de riesgo.
+* **Guía Estratégica:** Recomendaciones operativas automatizadas (políticas de ROP, niveles de revisión y mitigación de riesgo) según el cuadrante del producto.
 
-* **Cálculo Dinámico del ROP:** Actualización instantánea del Punto de Reorden óptimo mediante modelos estadísticos.
-* **Sensing de Volatilidad:** Dimensionamiento automático del Stock de Seguridad basado en Z-Scores y desviaciones estándar.
-* **Simulación a 90 Días:** Motor de simulación estocástica que proyecta el comportamiento del inventario y los ciclos de reabastecimiento (Generado con Plotly).
-* **Impacto Financiero:** Cuantificación en tiempo real del capital inmovilizado en función del nivel de servicio objetivo y el costo unitario del producto.
-* **Interfaz Corporativa:** Diseño de alto contraste (Dark Mode) optimizado para presentaciones ejecutivas y visibilidad en centros de control.
+### 2. Simulación de Escenarios y Alertas (What-If)
+Motor de cálculo táctico para la prevención de quiebres de stock y mitigación de capital inmovilizado.
+* **Radiografía del Almacén:** Mapa de calor (Treemap) que evalúa la salud de todo el portafolio en una fecha de corte, identificando excesos de inventario y riesgos de desabastecimiento.
+* **Proyección Estocástica a 90 Días:** Simulación individual por SKU que calcula y grafica en tiempo real el Punto de Reorden (ROP), el Stock de Seguridad y el Nivel Máximo (Target Stock) basándose en el Lead Time y los Días de Cobertura requeridos.
 
-##  Tecnologías Utilizadas
+### 3. Glosario Analítico
+Diccionario técnico integrado en la plataforma para alinear conceptos estadísticos (Nivel de Servicio, CV, ROP) con el equipo operativo y directivo del cliente.
 
-* **Framework Web:** [Streamlit](https://streamlit.io/)
-* **Análisis Numérico:** NumPy, Pandas, SciPy (Estadística)
-* **Visualización de Datos:** Plotly Graph Objects
+## Requisitos Técnicos e Instalación Local
 
-##  Instalación y Uso Local
-
-Para ejecutar este dashboard en un entorno local, sigue estos pasos:
+El entorno requiere Python 3.10 o superior. Para ejecutar la plataforma en un entorno local:
 
 1. **Clonar el repositorio:**
    ```bash
