@@ -9,61 +9,71 @@ import datetime
 # 1. Configuración de la página
 st.set_page_config(page_title="Stratelogik - Optimización de Inventarios", layout="wide", initial_sidebar_state="expanded")
 
-# 2. Inyección de CSS (UI Premium, Pestañas Oscuras de Alto Contraste)
+# 2. Inyección de CSS (Nueva Paleta Stratelogik)
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap');
     html, body, [class*="css"] { font-family: 'Montserrat', sans-serif; }
-    .stApp, [data-testid="stSidebar"] { background-color: #0A192F !important; }
     
+    /* Fondo principal Azul Navy */
+    .stApp, [data-testid="stSidebar"] { background-color: #031633 !important; }
+    
+    /* Contenedores de métricas */
     div[data-testid="metric-container"] {
-        background-color: #112240; border-left: 5px solid #00D2FF; 
+        background-color: #05224D; border-left: 5px solid #2E86FF; 
         padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.5);
     }
     div[data-testid="stMetricValue"] { color: #FFFFFF !important; font-weight: 800 !important; }
-    div[data-testid="stMetricLabel"] p { color: #E2E8F0 !important; font-weight: 600 !important; font-size: 1.15rem !important; }
-    h1, h2, h3, h4, p, label, .stMarkdown { color: #FFFFFF !important; }
-    .brand-text { color: #00D2FF !important; font-weight: 800; }
+    div[data-testid="stMetricLabel"] p { color: #D8DDE8 !important; font-weight: 600 !important; font-size: 1.15rem !important; }
     
-    .stTabs [data-baseweb="tab-list"] { gap: 10px; background-color: transparent; border-bottom: 1px solid #1C2541; }
+    /* Textos globales */
+    h1, h2, h3, h4, p, label, .stMarkdown { color: #FFFFFF !important; }
+    .brand-text { color: #2E86FF !important; font-weight: 800; }
+    
+    /* Pestañas (Tabs) */
+    .stTabs [data-baseweb="tab-list"] { gap: 10px; background-color: transparent; border-bottom: 1px solid #05224D; }
     .stTabs [data-baseweb="tab"] { 
-        height: 50px; white-space: pre-wrap; background-color: #112240; 
-        border-radius: 6px 6px 0 0; color: #8892B0 !important; font-weight: 600; 
-        border: 1px solid #1C2541; border-bottom: none; margin-bottom: -1px;
+        height: 50px; white-space: pre-wrap; background-color: #05224D; 
+        border-radius: 6px 6px 0 0; color: #D8DDE8 !important; font-weight: 600; 
+        border: 1px solid #05224D; border-bottom: none; margin-bottom: -1px;
         transition: all 0.3s ease;
     }
     .stTabs [aria-selected="true"] { 
-        background-color: #162C4E !important; 
+        background-color: #031633 !important; 
         color: #FFFFFF !important; 
-        border-bottom: 3px solid #00D2FF !important; 
-        box-shadow: 0 -4px 10px rgba(0, 210, 255, 0.05);
+        border-bottom: 3px solid #2E86FF !important; 
+        box-shadow: 0 -4px 10px rgba(46, 134, 255, 0.1);
     }
     
-    .control-box { background-color: #112240; padding: 20px; border-radius: 8px; border: 1px solid #1C2541; margin-bottom: 20px; }
-    .instrucciones-box { background-color: #112240; padding: 30px; border-radius: 8px; border: 1px solid #1C2541; margin-top: 20px;}
-    .sku-badge { background-color: #00D2FF; color: #0A192F; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; margin-left: 15px;}
+    /* Cajas de control e instrucciones */
+    .control-box { background-color: #05224D; padding: 20px; border-radius: 8px; border: 1px solid #2E86FF; margin-bottom: 20px; }
+    .instrucciones-box { background-color: #05224D; padding: 30px; border-radius: 8px; border: 1px solid #2E86FF; margin-top: 20px;}
+    .sku-badge { background-color: #2E86FF; color: #FFFFFF; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; margin-left: 15px;}
     
+    /* Matriz ABC-XYZ */
     .matrix-grid { display: grid; grid-template-columns: 120px 1fr 1fr 1fr; gap: 8px; margin-bottom: 30px; }
     .m-header-top { padding: 15px; text-align: center; border-radius: 6px; }
     .m-header-top.x { background-color: #1B5E20; }
     .m-header-top.y { background-color: #F57F17; }
     .m-header-top.z { background-color: #B71C1C; }
-    .m-header-left { padding: 15px; text-align: center; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #0D47A1; }
-    .m-cell { background-color: #112240; padding: 15px; border-radius: 6px; border-top: 4px solid; }
+    .m-header-left { padding: 15px; text-align: center; border-radius: 6px; display: flex; align-items: center; justify-content: center; background-color: #2E86FF; color: #FFFFFF; }
+    .m-cell { background-color: #05224D; padding: 15px; border-radius: 6px; border-top: 4px solid; }
     .m-cell.ax, .m-cell.bx, .m-cell.cx { border-top-color: #00E676; }
     .m-cell.ay, .m-cell.by, .m-cell.cy { border-top-color: #FFD600; }
     .m-cell.az, .m-cell.bz, .m-cell.cz { border-top-color: #FF5252; }
     .m-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 5px; }
     .m-subtitle { font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }
-    .m-text { font-size: 0.85rem; color: #E2E8F0; line-height: 1.4; margin-bottom: 8px; }
+    .m-text { font-size: 0.85rem; color: #D8DDE8; line-height: 1.4; margin-bottom: 8px; }
     
-    .summary-box { background-color: #162C4E; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #1C2541; }
-    .summary-val { font-size: 2rem; font-weight: 800; color: #00D2FF; }
-    .summary-label { font-size: 0.9rem; color: #E2E8F0; font-weight: 600; }
+    /* Resumen de distribución */
+    .summary-box { background-color: #05224D; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #2E86FF; }
+    .summary-val { font-size: 2rem; font-weight: 800; color: #2E86FF; }
+    .summary-label { font-size: 0.9rem; color: #D8DDE8; font-weight: 600; }
     
-    .glossary-card { background-color: #112240; padding: 25px; border-radius: 8px; border-left: 4px solid #00D2FF; margin-bottom: 15px; }
-    .glossary-title { font-size: 1.2rem; font-weight: 800; color: #00D2FF; margin-bottom: 8px; }
-    .glossary-desc { font-size: 1rem; color: #E2E8F0; line-height: 1.5; }
+    /* Glosario */
+    .glossary-card { background-color: #05224D; padding: 25px; border-radius: 8px; border-left: 4px solid #2E86FF; margin-bottom: 15px; }
+    .glossary-title { font-size: 1.2rem; font-weight: 800; color: #2E86FF; margin-bottom: 8px; }
+    .glossary-desc { font-size: 1rem; color: #D8DDE8; line-height: 1.5; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -109,10 +119,10 @@ if archivo_csv is None:
     st.markdown("""
     <div class="instrucciones-box">
         <h3>Inicialización de la Plataforma</h3>
-        <p style="margin-top: 15px; font-size: 1.1rem; color: #8892B0 !important;">
+        <p style="margin-top: 15px; font-size: 1.1rem; color: #D8DDE8 !important;">
             El motor de análisis requiere la carga de datos históricos para habilitar los modelos predictivos y de segmentación.
         </p>
-        <ol style="color: #E2E8F0; font-size: 1.1rem; line-height: 1.8; margin-top: 10px;">
+        <ol style="color: #D8DDE8; font-size: 1.1rem; line-height: 1.8; margin-top: 10px;">
             <li>Obtenga la estructura base (CSV) mediante el panel lateral.</li>
             <li>Incorpore los registros diarios de demanda y stock final.</li>
             <li>Cargue el archivo para activar los dashboards tácticos.</li>
@@ -131,8 +141,8 @@ else:
     # --- TAB 1: SEGMENTACIÓN ABC-XYZ ---
     with tab1:
         st.markdown("""
-            <div style='background-color: #112240; padding: 15px; border-left: 4px solid #00D2FF; border-radius: 4px; margin-bottom: 20px;'>
-                <p style='margin: 0; color: #E2E8F0; font-size: 1.05rem;'>
+            <div style='background-color: #05224D; padding: 15px; border-left: 4px solid #2E86FF; border-radius: 4px; margin-bottom: 20px;'>
+                <p style='margin: 0; color: #D8DDE8; font-size: 1.05rem;'>
                     <b>Objetivo de esta vista:</b> Segmentar el portafolio en 9 cuadrantes estratégicos cruzando el volumen de ventas (Pareto ABC) con la volatilidad de la demanda (Clase XYZ). Esta clasificación permite enfocar el esfuerzo operativo en los artículos más críticos y estandarizar políticas de compra por grupo.
                 </p>
             </div>
@@ -168,26 +178,28 @@ else:
             color_discrete_sequence=px.colors.qualitative.Safe
         )
         
-        fig_sc.add_shape(type="rect", x0=0, y0=0, x1=p_a, y1=x_max, fillcolor="rgba(0, 230, 118, 0.08)", line_width=0, layer="below")
-        fig_sc.add_shape(type="rect", x0=p_a, y0=0, x1=p_b, y1=x_max, fillcolor="rgba(0, 230, 118, 0.05)", line_width=0, layer="below")
-        fig_sc.add_shape(type="rect", x0=p_b, y0=0, x1=105, y1=x_max, fillcolor="rgba(0, 230, 118, 0.02)", line_width=0, layer="below")
-        fig_sc.add_shape(type="rect", x0=0, y0=x_max, x1=p_a, y1=y_max, fillcolor="rgba(255, 214, 0, 0.08)", line_width=0, layer="below")
-        fig_sc.add_shape(type="rect", x0=p_a, y0=x_max, x1=p_b, y1=y_max, fillcolor="rgba(255, 214, 0, 0.05)", line_width=0, layer="below")
-        fig_sc.add_shape(type="rect", x0=p_b, y0=x_max, x1=105, y1=y_max, fillcolor="rgba(255, 214, 0, 0.02)", line_width=0, layer="below")
-        fig_sc.add_shape(type="rect", x0=0, y0=y_max, x1=p_a, y1=max_y_val, fillcolor="rgba(255, 82, 82, 0.08)", line_width=0, layer="below")
-        fig_sc.add_shape(type="rect", x0=p_a, y0=y_max, x1=p_b, y1=max_y_val, fillcolor="rgba(255, 82, 82, 0.05)", line_width=0, layer="below")
-        fig_sc.add_shape(type="rect", x0=p_b, y0=y_max, x1=105, y1=max_y_val, fillcolor="rgba(255, 82, 82, 0.02)", line_width=0, layer="below")
+        fig_sc.add_shape(type="rect", x0=0, y0=0, x1=p_a, y1=x_max, fillcolor="rgba(0, 230, 118, 0.15)", line_width=0, layer="below")
+        fig_sc.add_shape(type="rect", x0=p_a, y0=0, x1=p_b, y1=x_max, fillcolor="rgba(0, 230, 118, 0.1)", line_width=0, layer="below")
+        fig_sc.add_shape(type="rect", x0=p_b, y0=0, x1=105, y1=x_max, fillcolor="rgba(0, 230, 118, 0.05)", line_width=0, layer="below")
+        fig_sc.add_shape(type="rect", x0=0, y0=x_max, x1=p_a, y1=y_max, fillcolor="rgba(255, 214, 0, 0.15)", line_width=0, layer="below")
+        fig_sc.add_shape(type="rect", x0=p_a, y0=x_max, x1=p_b, y1=y_max, fillcolor="rgba(255, 214, 0, 0.1)", line_width=0, layer="below")
+        fig_sc.add_shape(type="rect", x0=p_b, y0=x_max, x1=105, y1=y_max, fillcolor="rgba(255, 214, 0, 0.05)", line_width=0, layer="below")
+        fig_sc.add_shape(type="rect", x0=0, y0=y_max, x1=p_a, y1=max_y_val, fillcolor="rgba(255, 82, 82, 0.15)", line_width=0, layer="below")
+        fig_sc.add_shape(type="rect", x0=p_a, y0=y_max, x1=p_b, y1=max_y_val, fillcolor="rgba(255, 82, 82, 0.1)", line_width=0, layer="below")
+        fig_sc.add_shape(type="rect", x0=p_b, y0=y_max, x1=105, y1=max_y_val, fillcolor="rgba(255, 82, 82, 0.05)", line_width=0, layer="below")
 
-        fig_sc.add_vline(x=p_a, line_width=2, line_dash="dash", line_color="#8892B0", annotation_text="A | B", annotation_position="top left", annotation_font_color="#FFFFFF")
-        fig_sc.add_vline(x=p_b, line_width=2, line_dash="dash", line_color="#8892B0", annotation_text="B | C", annotation_position="top left", annotation_font_color="#FFFFFF")
-        fig_sc.add_hline(y=x_max, line_width=2, line_dash="dash", line_color="#8892B0", annotation_text="X | Y", annotation_font_color="#FFFFFF")
-        fig_sc.add_hline(y=y_max, line_width=2, line_dash="dash", line_color="#8892B0", annotation_text="Y | Z", annotation_font_color="#FFFFFF")
+        # Ajuste de color para contraste sobre el fondo gris
+        fig_sc.add_vline(x=p_a, line_width=2, line_dash="dash", line_color="#031633", annotation_text="A | B", annotation_position="top left", annotation_font_color="#031633")
+        fig_sc.add_vline(x=p_b, line_width=2, line_dash="dash", line_color="#031633", annotation_text="B | C", annotation_position="top left", annotation_font_color="#031633")
+        fig_sc.add_hline(y=x_max, line_width=2, line_dash="dash", line_color="#031633", annotation_text="X | Y", annotation_font_color="#031633")
+        fig_sc.add_hline(y=y_max, line_width=2, line_dash="dash", line_color="#031633", annotation_text="Y | Z", annotation_font_color="#031633")
         
+        # Fondo Gris Claro para la matriz de dispersión
         fig_sc.update_layout(
             title=dict(text="Dispersión ABC vs XYZ — Ranking por Valor (Eje X) • Coeficiente de Variación (Eje Y)", font=dict(color='#FFFFFF', size=16)),
-            xaxis=dict(color='#FFFFFF', gridcolor='#1C2541', range=[0, 105]),
-            yaxis=dict(color='#FFFFFF', gridcolor='#1C2541', range=[0, max_y_val]),
-            template="plotly_dark", plot_bgcolor="#0A192F", paper_bgcolor="#0A192F", height=600, margin=dict(t=50, b=40, l=40, r=40)
+            xaxis=dict(color='#FFFFFF', gridcolor='#FFFFFF', range=[0, 105]),
+            yaxis=dict(color='#FFFFFF', gridcolor='#FFFFFF', range=[0, max_y_val]),
+            template="plotly_dark", plot_bgcolor="#D8DDE8", paper_bgcolor="#031633", height=600, margin=dict(t=50, b=40, l=40, r=40)
         )
         st.plotly_chart(fig_sc, use_container_width=True)
 
@@ -288,8 +300,8 @@ else:
     # --- TAB 2: SIMULACIÓN DE ESCENARIOS Y ALERTAS ---
     with tab2:
         st.markdown("""
-            <div style='background-color: #112240; padding: 15px; border-left: 4px solid #00D2FF; border-radius: 4px; margin-bottom: 20px;'>
-                <p style='margin: 0; color: #E2E8F0; font-size: 1.05rem;'>
+            <div style='background-color: #05224D; padding: 15px; border-left: 4px solid #2E86FF; border-radius: 4px; margin-bottom: 20px;'>
+                <p style='margin: 0; color: #D8DDE8; font-size: 1.05rem;'>
                     <b>Objetivo de esta vista:</b> Ejecutar un modelo estocástico sobre un SKU específico para simular su comportamiento futuro. La plataforma calcula dinámicamente el Punto de Reorden (ROP), el Stock de Seguridad y el Nivel Máximo, previniendo tanto los quiebres de stock como la inmovilización innecesaria de capital.
                 </p>
             </div>
@@ -333,7 +345,7 @@ else:
             "Crítico (< Stock Seg.)": "#FF5252", 
             "Zona de Compra": "#FFD600", 
             "Saludable": "#00E676", 
-            "Exceso (> Máx)": "#8892B0"
+            "Exceso (> Máx)": "#D8DDE8"
         }
         
         df_snap = df_snap.sort_values(by=['Estado', 'Inventario_Final'], ascending=[True, False])
@@ -346,9 +358,9 @@ else:
         
         fig_health.update_layout(
             title=dict(text=f"Nivel de Inventario vs Alertas por SKU (Fecha: {fecha_seleccionada})", font=dict(color='#FFFFFF', size=16)),
-            xaxis=dict(title="Productos (SKU)", color='#FFFFFF', gridcolor='#1C2541'),
-            yaxis=dict(title="Unidades Físicas", color='#FFFFFF', gridcolor='#1C2541'),
-            template="plotly_dark", plot_bgcolor="#0A192F", paper_bgcolor="#0A192F", margin=dict(t=50, b=40, l=40, r=40)
+            xaxis=dict(title="Productos (SKU)", color='#FFFFFF', gridcolor='#05224D'),
+            yaxis=dict(title="Unidades Físicas", color='#FFFFFF', gridcolor='#05224D'),
+            template="plotly_dark", plot_bgcolor="#031633", paper_bgcolor="#031633", margin=dict(t=50, b=40, l=40, r=40)
         )
         st.plotly_chart(fig_health, use_container_width=True)
 
@@ -407,15 +419,15 @@ else:
 
         fig_sim = go.Figure()
         df_hp = df_sku_completo.tail(21)
-        fig_sim.add_trace(go.Scatter(x=df_hp['Fecha'], y=df_hp['Inventario_Final'], mode='lines+markers', line=dict(color='#8892B0', width=3), name='Historial'))
+        fig_sim.add_trace(go.Scatter(x=df_hp['Fecha'], y=df_hp['Inventario_Final'], mode='lines+markers', line=dict(color='#D8DDE8', width=3), name='Historial'))
         fig_sim.add_trace(go.Scatter(x=[df_hp.iloc[-1]['Fecha'], fechas_f[0]], y=[df_hp.iloc[-1]['Inventario_Final'], inv_f[0]], mode='lines', line=dict(color='#FFFFFF', width=2, dash='dot'), showlegend=False))
         fig_sim.add_trace(go.Scatter(x=fechas_f, y=[stock_seguridad]*dias_sim, fill='tozeroy', mode='none', fillcolor='rgba(239, 68, 68, 0.15)', name='Stock Seguridad'))
-        fig_sim.add_trace(go.Scatter(x=fechas_f, y=[rop]*dias_sim, mode='lines', line=dict(color='#00D2FF', width=3, dash='dash'), name='ROP IA'))
-        fig_sim.add_trace(go.Scatter(x=fechas_f, y=[max_target]*dias_sim, mode='lines', line=dict(color='#8892B0', width=2, dash='dot'), name='Nivel Máximo'))
+        fig_sim.add_trace(go.Scatter(x=fechas_f, y=[rop]*dias_sim, mode='lines', line=dict(color='#2E86FF', width=3, dash='dash'), name='ROP IA'))
+        fig_sim.add_trace(go.Scatter(x=fechas_f, y=[max_target]*dias_sim, mode='lines', line=dict(color='#D8DDE8', width=2, dash='dot'), name='Nivel Máximo'))
         fig_sim.add_trace(go.Scatter(x=fechas_f, y=inv_f, mode='lines', line=dict(color='#FFFFFF', width=3), name='Proyección'))
         
-        fig_sim.add_vline(x=ultima_fecha_hist, line_width=2, line_dash="dash", line_color="#00D2FF")
-        fig_sim.update_layout(template="plotly_dark", plot_bgcolor="#0A192F", paper_bgcolor="#0A192F", margin=dict(t=50, b=20))
+        fig_sim.add_vline(x=ultima_fecha_hist, line_width=2, line_dash="dash", line_color="#2E86FF")
+        fig_sim.update_layout(template="plotly_dark", plot_bgcolor="#031633", paper_bgcolor="#031633", margin=dict(t=50, b=20))
         
         with placeholder_chart:
             st.plotly_chart(fig_sim, use_container_width=True)
@@ -423,8 +435,8 @@ else:
     # --- TAB 3: GLOSARIO DE TÉRMINOS ---
     with tab3:
         st.markdown("""
-            <div style='background-color: #112240; padding: 15px; border-left: 4px solid #00D2FF; border-radius: 4px; margin-bottom: 20px;'>
-                <p style='margin: 0; color: #E2E8F0; font-size: 1.05rem;'>
+            <div style='background-color: #05224D; padding: 15px; border-left: 4px solid #2E86FF; border-radius: 4px; margin-bottom: 20px;'>
+                <p style='margin: 0; color: #D8DDE8; font-size: 1.05rem;'>
                     <b>Objetivo de esta vista:</b> Proveer un diccionario analítico estandarizado. Define los conceptos estadísticos y operativos clave que el motor de simulación utiliza para generar las recomendaciones tácticas.
                 </p>
             </div>
